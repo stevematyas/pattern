@@ -1,3 +1,26 @@
 web_addr: 0.0.0.0:4040
 # Fill this in with your authtoken from https://dashboard.ngrok.com/get-started/your-authtoken
-authtoken: 
+authtoken: 2c0rgZFQcnIgFnF72JznGphv4I6_3Vk4Q9cHw5wRy5K1uozvv
+version: 2
+log: stdout
+log_level: debug
+#region: us
+update_check: false
+root_cas: /etc/combined.pem
+tunnels:
+  plaid-webhook:
+    metadata: "webhook"
+    schemes:
+      - https
+    inspect: false
+    addr: server:5001
+    compression: true
+    ip_restriction:
+      allow_cidrs:
+        - 52.21.26.131/32
+        - 52.21.47.157/32
+        - 52.41.247.19/32
+        - 52.88.82.239/32
+    proto: http
+#    mutual_tls_cas: /etc/combined.pem
+

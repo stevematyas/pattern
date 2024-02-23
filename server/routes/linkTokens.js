@@ -49,9 +49,17 @@ router.post(
       if (redirect_uri.indexOf('http') === 0) {
         linkTokenParams.redirect_uri = redirect_uri;
       }
-      // If user has entered a webhook in the .env file
-      if (PLAID_WEBHOOK_URL.indexOf('http') === 0) {
-        linkTokenParams.webhook = PLAID_WEBHOOK_URL;
+
+      if (!PLAID_WEBHOOK_URL) {
+        const response = await fetch('http://ngrok:4040/api/tunnels');
+        const { tunnels } = await response.json();
+        const httpTunnel = tunnels.find(t => t.proto === 'http');
+        linkTokenParams.webhook = httpTunnel.public_url + '/services/webhook';
+      } else {
+        // If user has entered a webhook in the .env file
+        if (PLAID_WEBHOOK_URL.indexOf('http') === 0) {
+          linkTokenParams.webhook = PLAID_WEBHOOK_URL;
+        }
       }
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
       res.json(createResponse.data);
