@@ -27,7 +27,7 @@ router.post(
     try {
       const { userId, itemId } = req.body;
       let accessToken = null;
-      let products = ['transactions']; // must include transactions in order to receive transactions webhooks
+      let products = ['transactions', 'assets']; // must include transactions in order to receive transactions webhooks
       if (itemId != null) {
         // for the link update mode, include access token and an empty products array
         const itemIdResponse = await retrieveItemById(itemId);
@@ -41,6 +41,7 @@ router.post(
         },
         client_name: 'Pattern',
         products,
+        optional_products: ['auth'],
         country_codes: ['US'],
         language: 'en',
         access_token: accessToken,

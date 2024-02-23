@@ -31,7 +31,12 @@ const { PORT } = process.env;
 const server = app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
-const io = socketIo(server);
+const io = socketIo(server, {
+  cors: {
+    origin: "*",
+    credentials: true
+  }
+});
 
 app.use(logger('dev'));
 app.use(express.json());
