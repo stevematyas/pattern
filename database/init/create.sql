@@ -282,5 +282,5 @@ CREATE TABLE plaid_asset_reports_pdf
 (
   id SERIAL PRIMARY KEY,
   plaid_asset_report_requests_id integer REFERENCES plaid_asset_report_requests(id) ON DELETE CASCADE,
-  report LOB
+  report bytea
 );
