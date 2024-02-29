@@ -1,7 +1,7 @@
 /**
  * @file The application root. Defines the Express server configuration.
  */
-
+require('dotenv').config()
 const express = require('express');
 const socketIo = require('socket.io');
 const cookieParser = require('cookie-parser');

@@ -24,6 +24,8 @@ const {
 } = require('../util');
 const { updateTransactions } = require('../update_transactions');
 
+const { CreateAssetReport } = require('../AssetReportServices');
+
 const router = express.Router();
 
 /**
@@ -60,6 +62,11 @@ router.post(
       itemId,
       userId
     );
+
+    //Request the Plaid Asset Report for the Item.
+    CreateAssetReport(institutionId, accessToken, itemId, userId).then(() => {
+        req.io.emit('CREATE_ASSET_REPORT_REQUESTED', { itemId: newItem.id, userId: userId, institutionId: institutionId });
+    });
 
     // Make an initial call to fetch transactions and enable SYNC_UPDATES_AVAILABLE webhook sending
     // for this item.

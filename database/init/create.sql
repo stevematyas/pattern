@@ -183,7 +183,11 @@ CREATE TABLE transactions_table
   unofficial_currency_code text,
   date date NOT NULL,
   pending boolean NOT NULL,
+  label text,
   account_owner text,
+  primary_category text,
+  detailed_category text,
+  confidence_level text,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
@@ -251,4 +255,32 @@ CREATE TABLE plaid_api_events_table
   error_type text,
   error_code text,
   created_at timestamptz default now()
+);
+
+-- The plaid_asset_reports is used to store responses for /asset_report/create  .
+
+CREATE TABLE plaid_asset_report_requests
+(
+  id SERIAL PRIMARY KEY,
+  request json,
+  response json,
+  plaid_asset_report_id text,
+  plaid_asset_report_token text,
+  plaid_request_id text
+);
+
+-- The plaid_asset_reports is used to store responses for /asset_report/get  .
+CREATE TABLE plaid_asset_reports
+(
+  id SERIAL PRIMARY KEY,
+  plaid_asset_report_requests_id integer REFERENCES plaid_asset_report_requests(id) ON DELETE CASCADE,
+  report json,
+  warnings json,
+);
+
+CREATE TABLE plaid_asset_reports_pdf
+(
+  id SERIAL PRIMARY KEY,
+  plaid_asset_report_requests_id integer REFERENCES plaid_asset_report_requests(id) ON DELETE CASCADE,
+  report LOB
 );

@@ -38,7 +38,9 @@ const OPTIONS = { clientApp: 'Plaid-Pattern' };
  * @param {Object} response the response from the Plaid client.
  */
 const defaultLogger = async (clientMethod, clientMethodArgs, response) => {
-  const accessToken = clientMethodArgs[0].access_token;
+  //TODO: Refactor introduce different logger since some use asset_report_token too. alter DB table, add column etc..
+  const accessToken = clientMethodArgs[0].access_token
+    || (clientMethodArgs[0].access_tokens && clientMethodArgs[0].access_tokens[0]);
   const { id: itemId, user_id: userId } = await retrieveItemByPlaidAccessToken(
     accessToken
   );
@@ -51,6 +53,27 @@ const defaultLogger = async (clientMethod, clientMethodArgs, response) => {
   );
 };
 
+
+/**
+ * Logging function for Plaid client methods that use an asset_report_token as an argument. Associates
+ * the Plaid API event log entry with the item and user the request is for.
+ *
+ * @param {string} clientMethod the name of the Plaid client method called.
+ * @param {Array} clientMethodArgs the arguments passed to the Plaid client method.
+ * @param {Object} response the response from the Plaid client.
+ */
+const defaultAssetReportTokenLogger = async (clientMethod, clientMethodArgs, response) => {
+  //TODO: Refactor introduce different logger since some use asset_report_token too. alter DB table, add column etc..
+  const asset_report_token = clientMethodArgs[0].asset_report_token
+
+  await createPlaidApiEvent(
+    undefined,
+    undefined,
+    clientMethod,
+    clientMethodArgs,
+    response
+  );
+};
 /**
  * Logging function for Plaid client methods that do not use access_token as an argument. These
  * Plaid API event log entries will not be associated with an item or user.
@@ -84,6 +107,10 @@ const clientMethodLoggingFns = {
   linkTokenCreate: noAccessTokenLogger,
   transactionsSync: defaultLogger,
   sandboxItemResetLogin: defaultLogger,
+  assetReportCreate: defaultLogger,
+  assetReportGet:defaultAssetReportTokenLogger,
+  assetReportPdfGet: defaultAssetReportTokenLogger,
+  assetReportRefresh: defaultAssetReportTokenLogger,
 };
 // Wrapper for the Plaid client. This allows us to easily log data for all Plaid client requests.
 class PlaidClientWrapper {
@@ -117,7 +144,11 @@ class PlaidClientWrapper {
         await log(clientMethod, args, res);
         return res;
       } catch (err) {
-        await log(clientMethod, args, err.response.data);
+        const logResponseParam = (err.response && err.response.data && err.response.data)
+          || (err.message && err.message)
+          || (err.response && err.response)
+          || 'Unable to extract error payload, see createWrappedClientMethod()'
+        await log(clientMethod, args, logResponseParam);
         throw err;
       }
     };

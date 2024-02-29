@@ -10,6 +10,7 @@ const router = express.Router();
 const { asyncWrapper } = require('../middleware');
 const {
   handleTransactionsWebhook,
+  handleAssetReportWebhook,
   handleItemWebhook,
   unhandledWebhook,
 } = require('../webhookHandlers');
@@ -43,6 +44,7 @@ router.post(
     // @TODO implement handling for remaining webhook types.
     const webhookHandlerMap = {
       transactions: handleTransactionsWebhook,
+      assets: handleAssetReportWebhook,
       item: handleItemWebhook,
     };
     const webhookHandler = webhookHandlerMap[type] || unhandledWebhook;

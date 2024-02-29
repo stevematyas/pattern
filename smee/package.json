@@ -1,0 +1,16 @@
+{
+  "name": "server",
+  "version": "1.0.7",
+  "private": true,
+  "scripts": {
+    "start": "node index.js",
+    "debug": "nodemon --inspect=0.0.0.0:9229 index.js",
+    "lint": "eslint **/*.js -c .eslintrc.json"
+  },
+  "dependencies": {
+    "smee-client": "^2.0.1"
+  },
+  "devDependencies": {
+
+  }
+}

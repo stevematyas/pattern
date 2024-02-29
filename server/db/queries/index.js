@@ -43,6 +43,14 @@ const {
   deleteAssetByAssetId,
 } = require('./assets');
 
+const {
+  createOrUpdatePlaidAssetReportCreateRequestResponse,
+  retrievePlaidAssetReportTokenByAssetReportId,
+  retrievePlaidAssetReportRequestEntityByAssetReportId,
+  createOrUpdatePlaidAssetReport,
+  createOrUpdatePlaidAssetPdfReport
+} = require('./plaidAssetsReports');
+
 module.exports = {
   // accounts
   createAccounts,
@@ -80,4 +88,10 @@ module.exports = {
   deleteAssetByAssetId,
   // link events
   createLinkEvent,
+  //plaid asset reports
+  createOrUpdatePlaidAssetReportCreateRequestResponse,
+  retrievePlaidAssetReportTokenByAssetReportId,
+  retrievePlaidAssetReportRequestEntityByAssetReportId,
+  createOrUpdatePlaidAssetReport,
+  createOrUpdatePlaidAssetPdfReport
 };

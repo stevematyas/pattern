@@ -31,7 +31,7 @@ const createOrUpdateTransactions = async transactions => {
     const { id: accountId } = await retrieveAccountByPlaidAccountId(
       plaidAccountId
     );
-    const [category, subcategory] = categories;
+    const [category, subcategory] = categories === null ? [] : categories;
     try {
       const query = {
         text: `
@@ -56,8 +56,8 @@ const createOrUpdateTransactions = async transactions => {
             )
           VALUES
             ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
-          ON CONFLICT (plaid_transaction_id) DO UPDATE 
-            SET 
+          ON CONFLICT (plaid_transaction_id) DO UPDATE
+            SET
               plaid_category_id = EXCLUDED.plaid_category_id,
               category = EXCLUDED.category,
               subcategory = EXCLUDED.subcategory,

@@ -25,32 +25,29 @@ services:
       - 5001:5001
     environment:
       <<: *common-variables
-      PLAID_CLIENT_ID:
-      PLAID_SECRET_SANDBOX:
-      PLAID_SECRET_DEVELOPMENT:
-      PLAID_SANDBOX_REDIRECT_URI:
-      PLAID_DEVELOPMENT_REDIRECT_URI:
-      PLAID_ENV:
+      PLAID_CLIENT_ID: ${PLAID_CLIENT_ID}
+      PLAID_SECRET_SANDBOX: ${PLAID_SECRET_SANDBOX}
+      PLAID_SECRET_DEVELOPMENT: ${PLAID_SECRET_DEVELOPMENT}
+      PLAID_SANDBOX_REDIRECT_URI: ${PLAID_SANDBOX_REDIRECT_URI}
+      PLAID_DEVELOPMENT_REDIRECT_URI: ${PLAID_DEVELOPMENT_REDIRECT_URI}
+      PLAID_WEBHOOK_URL: https://smee.io/HHrCPr4m2SbzfJJ
+      PLAID_ENV: sandbox
       PORT: 5001
       DB_PORT: 5432
       DB_HOST_NAME: db
     depends_on:
       - db
-
-  ngrok:
-    image: ngrok/ngrok:latest
-    command: ["start", "--all", "--config", "/etc/ngrok.yml"]
-    volumes:
-      - ./ngrok/ngrok.yml:/etc/ngrok.yml
-      - ./ngrok/combined.pem:/etc/combined.pem
-#      - ./ngrok/corp-fin-rsa-sha256-Infrastructure-CA.pem:/etc/corp-fin-rsa-sha256-Infrastructure-CA.pem
-#      - ./ngrok/corp-fin-rsa-sha256-Root-CA.pem:/etc/corp-fin-rsa-sha256-Root-CA.pem
-#      - ./ngrok/ZscalerSSL.pem:/etc/ZscalerSSL.pem
-    ports:
-      - 4040:4040
-    depends_on:
-      - server
-
+#  smee:
+#    build: ./smee
+#    image: smee
+#    ports:
+##      - "5001:5001"
+#      - "50000:50000"
+#    environment:
+#      PORT: 8081
+#    command: ["-u", "https://smee.io/HHrCPr4m2SbzfJJ", "-t", "http://server:5001/services/webhook"]
+#    depends_on:
+#      - server
   client:
     build: ./client
     image: plaidinc/pattern-client:1.0.7
