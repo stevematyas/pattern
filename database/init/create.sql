@@ -275,7 +275,7 @@ CREATE TABLE plaid_asset_reports
   id SERIAL PRIMARY KEY,
   plaid_asset_report_requests_id integer REFERENCES plaid_asset_report_requests(id) ON DELETE CASCADE,
   report json,
-  warnings json,
+  warnings json
 );
 
 CREATE TABLE plaid_asset_reports_pdf
